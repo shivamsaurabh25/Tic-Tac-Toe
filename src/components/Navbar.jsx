@@ -6,7 +6,7 @@ export default function Navbar({ darkMode, toggleDarkMode, mode, changeMode }) {
       <div className="flex items-center gap-3 relative">
         <div className="absolute -inset-3 rounded-full blur-2xl animate-glow bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 z-0"></div>
         <img
-          src="./public/favicon.png"
+          src="https://iili.io/3MIK6RR.md.png"
           alt="logo"
           className="w-12 h-12 relative z-10"
         />
