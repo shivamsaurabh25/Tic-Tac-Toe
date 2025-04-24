@@ -50,7 +50,7 @@ export default function App() {
       <footer className="text-center p-4 text-sm opacity-80">
         ~made with (❤️) by{" "}
         <a
-          href="https://github.com/shivamsaurabh25"
+          href="https://shivamsaurabh25-portfolio.vercel.app/"
           target="_blank"
           rel="noopener noreferrer"
           className="underline hover:text-blue-500"
