@@ -111,48 +111,56 @@ export default function BoardGame({ mode, players, onScoreUpdate, darkMode, isAI
 
   const getBestMove = (board, player) => {
     const opponent = player === "X" ? "O" : "X";
-    const emptyIndices = board.map((v, i) => (v === null ? i : null)).filter((v) => v !== null);
-    
+
     const minimax = (newBoard, depth, isMaximizing) => {
-      const winner = checkWinner(newBoard);
-      if (winner === "X") return -10 + depth;
-      if (winner === "O") return 10 - depth;
-      if (emptyIndices.length === 0) return 0;
+      const result = checkWinner(newBoard);
+      if (result === "X") return -10 + depth;
+      if (result === "O") return 10 - depth;
+      if (!newBoard.includes(null)) return 0;
+
+      const availableSpots = newBoard
+        .map((v, i) => (v === null ? i : null))
+        .filter((v) => v !== null);
 
       if (isMaximizing) {
-        let best = -Infinity;
-        emptyIndices.forEach((index) => {
-          const newBoardCopy = [...newBoard];
-          newBoardCopy[index] = "O";
-          const score = minimax(newBoardCopy, depth + 1, false);
-          best = Math.max(score, best);
-        });
-        return best;
+        let bestScore = -Infinity;
+        for (let i of availableSpots) {
+          const copy = [...newBoard];
+          copy[i] = "O";
+          const score = minimax(copy, depth + 1, false);
+          bestScore = Math.max(score, bestScore);
+        }
+        return bestScore;
       } else {
-        let best = Infinity;
-        emptyIndices.forEach((index) => {
-          const newBoardCopy = [...newBoard];
-          newBoardCopy[index] = "X";
-          const score = minimax(newBoardCopy, depth + 1, true);
-          best = Math.min(score, best);
-        });
-        return best;
+        let bestScore = Infinity;
+        for (let i of availableSpots) {
+          const copy = [...newBoard];
+          copy[i] = "X";
+          const score = minimax(copy, depth + 1, true);
+          bestScore = Math.min(score, bestScore);
+        }
+        return bestScore;
       }
     };
 
-    let bestMove = -1;
-    let bestValue = -Infinity;
-    emptyIndices.forEach((index) => {
-      const newBoard = [...board];
-      newBoard[index] = "O";
-      const moveValue = minimax(newBoard, 0, false);
-      if (moveValue > bestValue) {
-        bestMove = index;
-        bestValue = moveValue;
-      }
-    });
+    const availableSpots = board
+      .map((v, i) => (v === null ? i : null))
+      .filter((v) => v !== null);
 
-    return bestMove;
+    let bestVal = -Infinity;
+    let move = null;
+
+    for (let i of availableSpots) {
+      const newBoard = [...board];
+      newBoard[i] = "O";
+      const moveVal = minimax(newBoard, 0, false);
+      if (moveVal > bestVal) {
+        bestVal = moveVal;
+        move = i;
+      }
+    }
+
+    return move;
   };
 
   return (
