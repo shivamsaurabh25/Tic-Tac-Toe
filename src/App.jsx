@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Navbar from "./components/Navbar";
 import BoardGame from "./components/BoardGame";
+import Navbar from "./components/Navbar";
 import PlayerForm from "./components/PlayerForm";
 import Scoreboard from "./components/Scoreboard";
 
@@ -8,44 +8,46 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [mode, setMode] = useState("normal");
   const [players, setPlayers] = useState({ X: "", O: "" });
-  const [scores, setScores] = useState({ X: 0, O: 0 });
+  const [scores, setScores] = useState({ X: 0, O: 0, Draw: 0 });
+  const [isAI, setIsAI] = useState(false);
+  const [difficulty, setDifficulty] = useState("easy");
 
-  const toggleDarkMode = () => setDarkMode(!darkMode);
-  const changeMode = (newMode) => {
-    setMode(newMode);
-  };
+  const toggleDarkMode = () => setDarkMode((prev) => !prev);
+  const changeMode = (val) => setMode(val);
+  const toggleAI = () => setIsAI((prev) => !prev);
 
-  const updateScore = (winner) => {
-    if (winner) {
-      setScores((prev) => ({ ...prev, [winner]: prev[winner] + 1 }));
-    }
+  const handleScoreUpdate = (winner) => {
+    setScores((prev) => ({
+      ...prev,
+      [winner]: (prev[winner] || 0) + 1,
+    }));
   };
 
   return (
-    <div
-      className={`${
-        darkMode
-          ? "bg-gray-900 text-white"
-          : "bg-gradient-to-br from-pink-100 to-blue-200 text-black"
-      } min-h-screen transition-all flex flex-col justify-between`}
-    >
-      <div>
-        <Navbar
-          darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
+    <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>
+      <Navbar
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+        mode={mode}
+        changeMode={changeMode}
+        isAI={isAI}
+        toggleAI={toggleAI}
+        difficulty={difficulty}
+        setDifficulty={setDifficulty}
+      />
+      <div className="container mx-auto py-8 px-4 flex flex-col items-center">
+      <PlayerForm
+        setPlayers={setPlayers} isAI={isAI}
+      />
+        <Scoreboard scores={scores} players={players} darkMode={darkMode} />
+        <BoardGame
           mode={mode}
-          changeMode={changeMode}
+          players={players}
+          onScoreUpdate={handleScoreUpdate}
+          darkMode={darkMode}
+          isAI={isAI}
+          difficulty={difficulty}
         />
-        <div className="max-w-xl mx-auto p-4">
-          <PlayerForm setPlayers={setPlayers} />
-          <Scoreboard players={players} scores={scores} />
-          <BoardGame
-            darkMode={darkMode}
-            mode={mode}
-            players={players}
-            onScoreUpdate={updateScore}
-          />
-        </div>
       </div>
       <footer className="text-center p-4 text-sm opacity-80">
         ~made with (❤️) by{" "}
