@@ -1,39 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function PlayerForm({ setPlayers }) {
-  const [names, setNames] = useState({ X: "", O: "" });
+export default function PlayerForm({ setPlayers, isAI }) {
+  const [playerX, setPlayerX] = useState("");
+  const [playerO, setPlayerO] = useState("");
+  const [previousPlayerO, setPreviousPlayerO] = useState("");
 
-  const handleChange = (e) => {
-    setNames({ ...names, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    if (isAI) {
+      setPreviousPlayerO(playerO);
+      setPlayerO("AI 🤖");
+    } else {
+      setPlayerO(previousPlayerO);
+    }
+  }, [isAI]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setPlayers(names);
-  };
+  useEffect(() => {
+    setPlayers({ X: playerX, O: playerO });
+  }, [playerX, playerO, setPlayers]);
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 my-4">
-      <input
-        name="X"
-        value={names.X}
-        onChange={handleChange}
-        placeholder="Player X Name"
-        className="p-2 rounded border dark:bg-gray-800 dark:text-white"
-      />
-      <input
-        name="O"
-        value={names.O}
-        onChange={handleChange}
-        placeholder="Player O Name"
-        className="p-2 rounded border dark:bg-gray-800 dark:text-white"
-      />
-      <button
-        type="submit"
-        className="bg-black text-white dark:bg-white dark:text-black p-2 rounded"
-      >
-        Start Game
-      </button>
-    </form>
+    <div className="flex flex-col gap-2 mb-4">
+      <div className="flex gap-2 items-center">
+        <label className="font-semibold w-20">Player X:</label>
+        <input
+          type="text"
+          placeholder="Enter name for X"
+          value={playerX}
+          onChange={(e) => setPlayerX(e.target.value)}
+          className="flex-1 p-2 rounded bg-white/70 dark:bg-gray-700/60 backdrop-blur-md"
+        />
+      </div>
+
+      <div className="flex gap-2 items-center">
+        <label className="font-semibold w-20">Player O:</label>
+        <input
+          type="text"
+          placeholder={isAI ? "AI 🤖" : "Enter name for O"}
+          value={playerO}
+          onChange={(e) => setPlayerO(e.target.value)}
+          disabled={isAI}
+          className={`flex-1 p-2 rounded bg-white/70 dark:bg-gray-700/60 backdrop-blur-md ${isAI ? "opacity-50 cursor-not-allowed" : ""}`}
+        />
+      </div>
+    </div>
   );
-}       ``
+}
