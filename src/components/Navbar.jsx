@@ -7,8 +7,8 @@ export default function Navbar({
   changeMode,
   isAI,
   toggleAI,
-  difficulty,
-  setdifficulty,
+  Difficulty,
+  setDifficulty,
 }) {
   return (
     <nav className="w-full flex flex-col md:flex-row justify-between items-start md:items-center p-4 gap-4 md:gap-0 shadow-md backdrop-blur-md bg-white/30 dark:bg-black/30 relative z-10">
@@ -34,8 +34,8 @@ export default function Navbar({
 
         <select
           className="bg-transparent border p-1 rounded text-black dark:text-white dark:bg-black/30 w-full md:w-auto"
-          value={difficulty}
-          onChange={(e) => setdifficulty(e.target.value)}
+          value={Difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
         >
           <option value="easy">Easy AI</option>
           <option value="hard">Hard AI</option>
